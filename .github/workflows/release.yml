@@ -1,9 +1,6 @@
 name: Build Obsidian Plugin
 
-on:
-    push:
-        tags:
-            - "*.*.*"
+on: workflow_dispatch
 
 env:
     PLUGIN_NAME: obsidian-ribbon-divider
@@ -25,10 +22,13 @@ jobs:
                   ls
                   echo "::set-output name=tag_name::$(git tag --sort version:refname | tail -n 1)"
                   echo "github.ref: ${{ github.ref }}"
+            - name: Get Package Version
+              id: get_package_version
+              run: echo "PACKAGE_VERSION=$(cat package.json | jq -r '.version')" >> $GITHUB_ENV
             - name: Release
               uses: softprops/action-gh-release@v1
-              if: startsWith(github.ref, 'refs/tags/')
               with:
+                tag_name: ${{ env.PACKAGE_VERSION }}
                 files: |
                   ${{ env.PLUGIN_NAME }}.zip
                   main.js
