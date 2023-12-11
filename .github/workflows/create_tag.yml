@@ -10,6 +10,8 @@ jobs:
       - name: Get Package Version
         id: get_package_version
         run: echo "PACKAGE_VERSION=$(cat package.json | jq -r '.version')" >> $GITHUB_ENV
-      - name: Test
-        run: echo $PACKAGE_VERSION
-          
+      - name: Crete and Push Tag
+        run: |
+          echo Creating Tag: $PACKAGE_VERSION
+          git tag $PACKAGE_VERSION
+          git push origin $PACKAGE_VERSION
