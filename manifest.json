@@ -5,7 +5,6 @@
 	"minAppVersion": "0.15.0",
 	"description": "A plugin for Obsidian.MD that allows you to add dividers to the ribbon to space out your icons.",
 	"author": "Andrew McGivery",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
-	"isDesktopOnly": false
+	"authorUrl": "https://github.com/andrewmcgivery",
+	"isDesktopOnly": true
 }
