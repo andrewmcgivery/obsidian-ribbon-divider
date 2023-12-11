@@ -9,6 +9,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Get Package Version
         id: get_package_version
-        run: |
-          PACKAGE_VERSION=$(cat package.json | jq -r '.version')
-          echo PACKAGE_VERSION
+        run: echo "PACKAGE_VERSION=$(cat package.json | jq -r '.version')" >> $GITHUB_ENV
+      - name: Test
+        run: echo $PACKAGE_VERSION
+          
