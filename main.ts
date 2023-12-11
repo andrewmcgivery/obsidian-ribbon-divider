@@ -23,6 +23,8 @@ if (process.env.NODE_ENV === "development") {
 	);
 }
 
+// This is a test change!
+
 export default class DividerPlugin extends Plugin {
 	settings: DividerPluginSettings;
 	dividerElements: Record<string, HTMLElement> = {};
