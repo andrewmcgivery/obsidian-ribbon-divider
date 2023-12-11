@@ -16,6 +16,7 @@ jobs:
             - name: Build
               id: build
               run: |
+                  npm ci
                   npm run build
                   zip -r ${{ env.PLUGIN_NAME }}.zip dist
                   ls
