@@ -1,6 +1,9 @@
 name: Build Obsidian Plugin
 
-on: workflow_dispatch
+on:
+    push:
+        tags:
+            - '*'
 
 env:
     PLUGIN_NAME: obsidian-ribbon-divider
