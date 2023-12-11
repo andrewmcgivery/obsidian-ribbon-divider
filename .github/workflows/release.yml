@@ -22,7 +22,7 @@ jobs:
                   echo Building for version PACKAGE_VERSION
                   npm ci
                   npm run build
-                  zip -r ${{ env.PLUGIN_NAME }}-${{ env.PACKAGE_VERSION }}.zip dist
+                  zip -r ${{ env.PLUGIN_NAME }}-${{ env.PACKAGE_VERSION }}.zip dist/*
                   ls            
             - name: Release
               uses: softprops/action-gh-release@v1
