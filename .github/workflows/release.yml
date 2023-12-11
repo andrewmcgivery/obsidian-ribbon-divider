@@ -30,6 +30,6 @@ jobs:
                 tag_name: ${{ env.PACKAGE_VERSION }}
                 files: |
                   ${{ env.PLUGIN_NAME }}-${{ env.PACKAGE_VERSION }}.zip
-                  main.js
-                  manifest.json
-                  styles.css
+                  dist/main.js
+                  dist/manifest.json
+                  dist/styles.css
