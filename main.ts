@@ -115,7 +115,6 @@ class DividerSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl("h1", { text: "Ribbon Dividers" });
 		containerEl.createEl("p", {
 			attr: {
 				style: "display: block; margin-bottom: 5px",
@@ -124,7 +123,7 @@ class DividerSettingTab extends PluginSettingTab {
 		});
 		containerEl.createEl("hr");
 
-		containerEl.createEl("h2", { text: "Configure Dividers" });
+		containerEl.createEl("h2", { text: "Configure dividers" });
 		const dividersContainerEl = containerEl.createDiv("dividers-container");
 
 		Object.keys(this.plugin.settings.dividers).forEach((dividerId) => {
@@ -148,7 +147,7 @@ class DividerSettingTab extends PluginSettingTab {
 		});
 
 		containerEl
-			.createEl("button", { text: "New Divider", cls: "mod-cta" })
+			.createEl("button", { text: "New divider", cls: "mod-cta" })
 			.addEventListener("click", () => {
 				this.plugin.addDivider({
 					id: crypto.randomUUID(),
