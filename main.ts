@@ -123,7 +123,6 @@ class DividerSettingTab extends PluginSettingTab {
 		});
 		containerEl.createEl("hr");
 
-		containerEl.createEl("h2", { text: "Configure dividers" });
 		const dividersContainerEl = containerEl.createDiv("dividers-container");
 
 		Object.keys(this.plugin.settings.dividers).forEach((dividerId) => {
