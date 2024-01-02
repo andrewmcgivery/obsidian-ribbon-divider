@@ -1,3 +1,5 @@
+[![GitHub all releases](https://img.shields.io/github/downloads/andrewmcgivery/obsidian-ribbon-divider/total?style=for-the-badge&logo=obsidian&color=rgb(124%2058%20237))](https://obsidian.md/plugins?id=ribbon-divider)
+
 # Obsidian Ribbon Divider
 
 A plugin for Obsidian.MD that allows you to add dividers to the ribbon to space out your icons.
@@ -6,7 +8,9 @@ A plugin for Obsidian.MD that allows you to add dividers to the ribbon to space 
 
 ## How to Install
 
-Plugin will be added to official repository shortly.
+Plugin can be installed from the official plugin list.
+
+[Install Ribbon Divider](https://obsidian.md/plugins?id=ribbon-divider)
 
 ## How to Use
 
