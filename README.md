@@ -50,3 +50,7 @@ For example, to target a divider with the id `4714cc30-fb33-4da8-857a-a5d6478c9f
 ## Reporting Issues
 
 If you run into any issues with this plugin, please [open an issue](https://github.com/andrewmcgivery/obsidian-ribbon-divider/issues/new) and incude as much detail as possible, including screenshots.
+
+# Leave a Tip
+
+<a href="https://www.buymeacoffee.com/andrewmcgivery" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
