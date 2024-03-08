@@ -1,7 +1,7 @@
 {
 	"id": "ribbon-divider",
 	"name": "Ribbon Divider",
-	"version": "1.1.0-beta.6",
+	"version": "1.1.0",
 	"minAppVersion": "0.15.0",
 	"description": "Allows you to add dividers to the ribbon to space out your icons.",
 	"author": "Andrew McGivery",
