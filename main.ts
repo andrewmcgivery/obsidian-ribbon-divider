@@ -41,17 +41,11 @@ export default class DividerPlugin extends Plugin {
 		this.versionCheck();
 
 		// Render the dividers based on what is already in settings
-		// Don't try to render them on phones since it ends up being a context menu
-		if (
-			// @ts-ignore
-			!(this.app.isMobile && document.body.classList.contains("is-phone"))
-		) {
-			Object.keys(this.settings.dividers).forEach((dividerId) => {
-				const divider = this.settings.dividers[dividerId];
+		Object.keys(this.settings.dividers).forEach((dividerId) => {
+			const divider = this.settings.dividers[dividerId];
 
-				this.renderDivider(divider);
-			});
-		}
+			this.renderDivider(divider);
+		});
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new DividerSettingTab(this.app, this));
