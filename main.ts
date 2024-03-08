@@ -169,8 +169,10 @@ export default class DividerPlugin extends Plugin {
 	async removeDivider(dividerId: string) {
 		delete this.settings.dividers[dividerId];
 		this.saveSettings();
-		this.dividerElements[dividerId].remove();
-		delete this.dividerElements[dividerId];
+		if (this.dividerElements[dividerId]) {
+			this.dividerElements[dividerId].remove();
+			delete this.dividerElements[dividerId];
+		}
 	}
 }
 
