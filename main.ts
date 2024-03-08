@@ -1,4 +1,12 @@
-import { App, Plugin, PluginSettingTab, Setting } from "obsidian";
+import {
+	App,
+	Notice,
+	Plugin,
+	PluginSettingTab,
+	Setting,
+	requestUrl,
+} from "obsidian";
+import { v4 as uuidv4 } from "uuid";
 
 interface Divider {
 	id: string;
@@ -30,15 +38,37 @@ export default class DividerPlugin extends Plugin {
 	async onload() {
 		await this.loadSettings();
 
-		// Render the dividers based on what is already in settings
-		Object.keys(this.settings.dividers).forEach((dividerId) => {
-			const divider = this.settings.dividers[dividerId];
+		this.versionCheck();
 
-			this.renderDivider(divider);
-		});
+		// Render the dividers based on what is already in settings
+		// Don't try to render them on phones since it ends up being a context menu
+		if (
+			// @ts-ignore
+			!(this.app.isMobile && document.body.classList.contains("is-phone"))
+		) {
+			Object.keys(this.settings.dividers).forEach((dividerId) => {
+				const divider = this.settings.dividers[dividerId];
+
+				this.renderDivider(divider);
+			});
+		}
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new DividerSettingTab(this.app, this));
+
+		if (process.env.NODE_ENV === "development") {
+			// @ts-ignore
+			if (process.env.EMULATE_MOBILE && !this.app.isMobile) {
+				// @ts-ignore
+				this.app.emulateMobile(true);
+			}
+
+			// @ts-ignore
+			if (!process.env.EMULATE_MOBILE && this.app.isMobile) {
+				// @ts-ignore
+				this.app.emulateMobile(false);
+			}
+		}
 	}
 
 	onunload() {}
@@ -60,6 +90,43 @@ export default class DividerPlugin extends Plugin {
 	 */
 	async saveSettings() {
 		await this.saveData(this.settings);
+	}
+
+	/**
+	 * Check the local plugin version against github. If there is a new version, notify the user.
+	 */
+	async versionCheck() {
+		const localVersion = process.env.PLUGIN_VERSION;
+		const stableVersion = await requestUrl(
+			"https://raw.githubusercontent.com/andrewmcgivery/obsidian-ribbon-divider/main/package.json"
+		).then(async (res) => {
+			if (res.status === 200) {
+				const response = await res.json;
+				return response.version;
+			}
+		});
+		const betaVersion = await requestUrl(
+			"https://raw.githubusercontent.com/andrewmcgivery/obsidian-ribbon-divider/beta/package.json"
+		).then(async (res) => {
+			if (res.status === 200) {
+				const response = await res.json;
+				return response.version;
+			}
+		});
+
+		if (localVersion?.indexOf("beta") !== -1) {
+			if (localVersion !== betaVersion) {
+				new Notice(
+					"There is a beta update available for the Ribbon Divider plugin. Please update to to the latest version to get the latest features!",
+					0
+				);
+			}
+		} else if (localVersion !== stableVersion) {
+			new Notice(
+				"There is an update available for the Ribbon Divider plugin. Please update to to the latest version to get the latest features!",
+				0
+			);
+		}
 	}
 
 	/**
@@ -149,7 +216,7 @@ class DividerSettingTab extends PluginSettingTab {
 			.createEl("button", { text: "New divider", cls: "mod-cta" })
 			.addEventListener("click", () => {
 				this.plugin.addDivider({
-					id: crypto.randomUUID(),
+					id: uuidv4(),
 				});
 				this.display();
 			});
