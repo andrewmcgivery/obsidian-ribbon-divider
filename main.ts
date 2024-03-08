@@ -199,20 +199,14 @@ class DividerSettingTab extends PluginSettingTab {
 
 		Object.keys(this.plugin.settings.dividers).forEach((dividerId) => {
 			const divider = this.plugin.settings.dividers[dividerId];
-			const dividerEl = dividersContainerEl.createEl("div", {
-				attr: {
-					"data-gate-id": divider.id,
-					class: "ribbondividers-settings-divider",
-				},
-			});
 
-			new Setting(dividerEl)
+			new Setting(dividersContainerEl)
 				.setName("Divider")
 				.setDesc(`Id: ${divider.id}`)
 				.addButton((button) => {
 					button.setButtonText("Delete").onClick(async () => {
 						await this.plugin.removeDivider(divider.id);
-						dividerEl.remove();
+						this.display();
 					});
 				});
 		});
