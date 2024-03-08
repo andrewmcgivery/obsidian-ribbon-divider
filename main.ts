@@ -1,4 +1,12 @@
-import { App, Plugin, PluginSettingTab, Setting } from "obsidian";
+import {
+	App,
+	Notice,
+	Plugin,
+	PluginSettingTab,
+	Setting,
+	requestUrl,
+} from "obsidian";
+import { v4 as uuidv4 } from "uuid";
 
 interface Divider {
 	id: string;
@@ -30,6 +38,8 @@ export default class DividerPlugin extends Plugin {
 	async onload() {
 		await this.loadSettings();
 
+		this.versionCheck();
+
 		// Render the dividers based on what is already in settings
 		Object.keys(this.settings.dividers).forEach((dividerId) => {
 			const divider = this.settings.dividers[dividerId];
@@ -39,6 +49,20 @@ export default class DividerPlugin extends Plugin {
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new DividerSettingTab(this.app, this));
+
+		if (process.env.NODE_ENV === "development") {
+			// @ts-ignore
+			if (process.env.EMULATE_MOBILE && !this.app.isMobile) {
+				// @ts-ignore
+				this.app.emulateMobile(true);
+			}
+
+			// @ts-ignore
+			if (!process.env.EMULATE_MOBILE && this.app.isMobile) {
+				// @ts-ignore
+				this.app.emulateMobile(false);
+			}
+		}
 	}
 
 	onunload() {}
@@ -63,6 +87,43 @@ export default class DividerPlugin extends Plugin {
 	}
 
 	/**
+	 * Check the local plugin version against github. If there is a new version, notify the user.
+	 */
+	async versionCheck() {
+		const localVersion = process.env.PLUGIN_VERSION;
+		const stableVersion = await requestUrl(
+			"https://raw.githubusercontent.com/andrewmcgivery/obsidian-ribbon-divider/main/package.json"
+		).then(async (res) => {
+			if (res.status === 200) {
+				const response = await res.json;
+				return response.version;
+			}
+		});
+		const betaVersion = await requestUrl(
+			"https://raw.githubusercontent.com/andrewmcgivery/obsidian-ribbon-divider/beta/package.json"
+		).then(async (res) => {
+			if (res.status === 200) {
+				const response = await res.json;
+				return response.version;
+			}
+		});
+
+		if (localVersion?.indexOf("beta") !== -1) {
+			if (localVersion !== betaVersion) {
+				new Notice(
+					"There is a beta update available for the Ribbon Divider plugin. Please update to to the latest version to get the latest features!",
+					0
+				);
+			}
+		} else if (localVersion !== stableVersion) {
+			new Notice(
+				"There is an update available for the Ribbon Divider plugin. Please update to to the latest version to get the latest features!",
+				0
+			);
+		}
+	}
+
+	/**
 	 * Renders a divider on the ribbon. The HTMLElement is saved to this.dividerElemenets so we can remove it if the
 	 * user deletes it from the settings screen.
 	 * @param divider
@@ -70,7 +131,7 @@ export default class DividerPlugin extends Plugin {
 	async renderDivider(divider: Divider) {
 		const dividerIconEl = this.addRibbonIcon(
 			"",
-			`Divider: ${divider.id}`,
+			`-`,
 			(evt: MouseEvent) => {}
 		);
 		dividerIconEl.addClass("ribbon-divider");
@@ -97,8 +158,10 @@ export default class DividerPlugin extends Plugin {
 	async removeDivider(dividerId: string) {
 		delete this.settings.dividers[dividerId];
 		this.saveSettings();
-		this.dividerElements[dividerId].remove();
-		delete this.dividerElements[dividerId];
+		if (this.dividerElements[dividerId]) {
+			this.dividerElements[dividerId].remove();
+			delete this.dividerElements[dividerId];
+		}
 	}
 }
 
@@ -127,20 +190,14 @@ class DividerSettingTab extends PluginSettingTab {
 
 		Object.keys(this.plugin.settings.dividers).forEach((dividerId) => {
 			const divider = this.plugin.settings.dividers[dividerId];
-			const dividerEl = dividersContainerEl.createEl("div", {
-				attr: {
-					"data-gate-id": divider.id,
-					class: "ribbondividers-settings-divider",
-				},
-			});
 
-			new Setting(dividerEl)
+			new Setting(dividersContainerEl)
 				.setName("Divider")
 				.setDesc(`Id: ${divider.id}`)
 				.addButton((button) => {
 					button.setButtonText("Delete").onClick(async () => {
 						await this.plugin.removeDivider(divider.id);
-						dividerEl.remove();
+						this.display();
 					});
 				});
 		});
@@ -149,7 +206,7 @@ class DividerSettingTab extends PluginSettingTab {
 			.createEl("button", { text: "New divider", cls: "mod-cta" })
 			.addEventListener("click", () => {
 				this.plugin.addDivider({
-					id: crypto.randomUUID(),
+					id: uuidv4(),
 				});
 				this.display();
 			});
