@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-ribbon-divider",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"description": "A plugin for Obsidian.MD that allows you to add dividers to the ribbon to space out your icons.",
 	"main": "dist/main.js",
 	"scripts": {

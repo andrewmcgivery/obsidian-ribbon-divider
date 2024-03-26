@@ -129,9 +129,13 @@ export default class DividerPlugin extends Plugin {
 	 * @param divider
 	 */
 	async renderDivider(divider: Divider) {
+		if (document.body.hasClass("is-phone")) {
+			return;
+		}
+
 		const dividerIconEl = this.addRibbonIcon(
 			"",
-			`-`,
+			`ribbon-divider-${divider.id}`,
 			(evt: MouseEvent) => {}
 		);
 		dividerIconEl.addClass("ribbon-divider");
